@@ -56,9 +56,6 @@ export const BoardCard = ({ board }: BoardCardProps) => {
         <h3 className="truncate font-display text-xl font-semibold leading-tight text-foreground">
           {board.name}
         </h3>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {board.pinsLabel} <span className="mx-1.5">·</span> {board.updatedLabel}
-        </p>
       </div>
     </Link>
   );

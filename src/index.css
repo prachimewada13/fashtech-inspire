@@ -60,25 +60,26 @@
   }
 
   .dark {
-    --background: 20 14% 6%;
-    --foreground: 36 33% 97%;
-    --card: 20 14% 9%;
-    --card-foreground: 36 33% 97%;
-    --popover: 20 14% 9%;
-    --popover-foreground: 36 33% 97%;
-    --primary: 36 33% 97%;
-    --primary-foreground: 20 14% 8%;
-    --secondary: 20 10% 14%;
-    --secondary-foreground: 36 33% 97%;
-    --muted: 20 10% 14%;
-    --muted-foreground: 30 10% 65%;
-    --accent: 12 65% 58%;
-    --accent-foreground: 36 33% 97%;
-    --destructive: 0 62% 40%;
-    --destructive-foreground: 36 33% 97%;
-    --border: 20 10% 18%;
-    --input: 20 10% 18%;
-    --ring: 12 65% 58%;
+    /* Deep blood-red palette: #4e0101, #d10404, #ac0808, #8e0e0e, #f81616 */
+    --background: 0 99% 4%; /* #1a0000-ish near black-red */
+    --foreground: 0 95% 97%;
+    --card: 0 99% 16%; /* #4e0101 */
+    --card-foreground: 0 95% 97%;
+    --popover: 0 99% 16%;
+    --popover-foreground: 0 95% 97%;
+    --primary: 0 96% 53%; /* #f81616 */
+    --primary-foreground: 0 95% 97%;
+    --secondary: 0 90% 30%; /* #8e0e0e */
+    --secondary-foreground: 0 95% 97%;
+    --muted: 0 99% 16%; /* #4e0101 */
+    --muted-foreground: 0 60% 80%;
+    --accent: 0 94% 42%; /* #d10404 */
+    --accent-foreground: 0 95% 97%;
+    --destructive: 0 89% 36%; /* #ac0808 */
+    --destructive-foreground: 0 95% 97%;
+    --border: 0 90% 30%; /* #8e0e0e */
+    --input: 0 90% 30%;
+    --ring: 0 96% 53%; /* #f81616 */
   }
 }
 
