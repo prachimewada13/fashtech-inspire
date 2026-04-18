@@ -1,17 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Header } from "@/components/Header";
 import { BoardsGrid } from "@/components/boards/BoardsGrid";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBoards } from "@/hooks/useBoards";
-import { AlertCircle, SlidersHorizontal } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-const FILTERS = ["Group", "Secret"] as const;
+import { AlertCircle } from "lucide-react";
 
 const Boards = () => {
   const { data: boards, isLoading, isError, error, refetch } = useBoards();
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   // Force dark theme just for this page (Pinterest-style night UI).
   useEffect(() => {
@@ -31,40 +27,11 @@ const Boards = () => {
 
       <main className="container py-10">
         {/* Title */}
-        <section className="mb-8">
+        <section className="mb-10">
           <h1 className="font-display text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
-            Your saved ideas
+            My Collections
           </h1>
         </section>
-
-        {/* Filter row */}
-        <div className="mb-8 flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 rounded-full border border-border/60"
-            aria-label="Filter"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-          </Button>
-          {FILTERS.map((f) => {
-            const active = activeFilter === f;
-            return (
-              <button
-                key={f}
-                onClick={() => setActiveFilter(active ? null : f)}
-                className={cn(
-                  "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border/60 bg-transparent text-foreground hover:border-foreground/60",
-                )}
-              >
-                {f}
-              </button>
-            );
-          })}
-        </div>
 
         {/* Loading */}
         {isLoading && (
