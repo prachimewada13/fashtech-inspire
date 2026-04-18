@@ -1,11 +1,9 @@
-import type { Board } from "@/types/board";
+import type { MockBoard } from "@/lib/mockBoards";
 import { BoardCard } from "./BoardCard";
 
 interface BoardsGridProps {
-  boards: Board[];
+  boards: MockBoard[];
 }
-
-const heights = ["h-64", "h-80", "h-72", "h-96", "h-60", "h-80", "h-72", "h-64"];
 
 export const BoardsGrid = ({ boards }: BoardsGridProps) => {
   if (boards.length === 0) {
@@ -20,9 +18,9 @@ export const BoardsGrid = ({ boards }: BoardsGridProps) => {
   }
 
   return (
-    <div className="columns-2 gap-4 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5">
-      {boards.map((b, i) => (
-        <BoardCard key={b.id} board={b} heightClass={heights[i % heights.length]} />
+    <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {boards.map((b) => (
+        <BoardCard key={b.id} board={b} />
       ))}
     </div>
   );
