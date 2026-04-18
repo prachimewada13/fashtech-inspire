@@ -1,66 +1,136 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { BoardsGrid } from "@/components/boards/BoardsGrid";
-import { StyleFilter } from "@/components/boards/StyleFilter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBoards } from "@/hooks/useBoards";
-import { Plus, AlertCircle } from "lucide-react";
+import { AlertCircle, SlidersHorizontal, Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const ALL = "All";
+type Tab = "Pins" | "Boards" | "Collages";
+const TABS: Tab[] = ["Pins", "Boards", "Collages"];
+const FILTERS = ["Group", "Secret"] as const;
 
 const Boards = () => {
   const { data: boards, isLoading, isError, error, refetch } = useBoards();
-  const [activeStyle, setActiveStyle] = useState<string>(ALL);
+  const [activeTab, setActiveTab] = useState<Tab>("Boards");
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
-  const styles = useMemo(() => {
-    const set = new Set<string>();
-    boards?.forEach((b) => b.style && set.add(b.style));
-    return [ALL, ...Array.from(set).sort()];
-  }, [boards]);
+  // Force dark theme just for this page (Pinterest-style night UI).
+  useEffect(() => {
+    const root = document.documentElement;
+    const had = root.classList.contains("dark");
+    root.classList.add("dark");
+    return () => {
+      if (!had) root.classList.remove("dark");
+    };
+  }, []);
 
-  const filtered = useMemo(() => {
-    if (!boards) return [];
-    return activeStyle === ALL
-      ? boards
-      : boards.filter((b) => b.style?.toLowerCase() === activeStyle.toLowerCase());
-  }, [boards, activeStyle]);
+  const filtered = useMemo(() => boards ?? [], [boards]);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="container py-10">
-        {/* Editorial header */}
-        <section className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        {/* Title + profile row */}
+        <section className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-accent">Inspire</p>
-            <h1 className="mt-2 font-display text-4xl font-bold leading-tight text-foreground sm:text-5xl">
-              Your boards
+            <h1 className="font-display text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
+              Your saved ideas
             </h1>
-            <p className="mt-3 max-w-xl text-sm text-muted-foreground">
-              Curated moodboards across every aesthetic — goth, streetwear, minimal, y2k. Pin looks, build a vibe, wear the story.
-            </p>
           </div>
-          <Button size="lg" className="gap-2 self-start">
-            <Plus className="h-4 w-4" /> New board
-          </Button>
+
+          <div className="flex items-center gap-4">
+            <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-muted ring-2 ring-border">
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=70"
+                alt="Profile"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="font-display text-lg font-semibold text-foreground">Morticia</p>
+              <p className="max-w-xs truncate text-xs text-muted-foreground">
+                You don't know me, you just know a part of me
+              </p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">
+                10 followers · 66 following
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              className="ml-2 shrink-0 rounded-full bg-secondary px-5 text-sm font-medium hover:bg-secondary/80"
+            >
+              Share profile
+            </Button>
+          </div>
         </section>
 
-        {/* Style filters */}
-        {!isLoading && !isError && boards && boards.length > 0 && (
-          <div className="mb-8">
-            <StyleFilter styles={styles} active={activeStyle} onChange={setActiveStyle} />
+        {/* Tabs row */}
+        <div className="mb-6 flex items-center gap-8 border-b border-border/40">
+          {TABS.map((t) => {
+            const active = activeTab === t;
+            return (
+              <button
+                key={t}
+                onClick={() => setActiveTab(t)}
+                className={cn(
+                  "relative pb-3 text-sm font-medium transition-colors",
+                  active
+                    ? "text-foreground after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Filter row */}
+        <div className="mb-8 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 rounded-full border border-border/60"
+              aria-label="Filter"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
+            {FILTERS.map((f) => {
+              const active = activeFilter === f;
+              return (
+                <button
+                  key={f}
+                  onClick={() => setActiveFilter(active ? null : f)}
+                  className={cn(
+                    "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                    active
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border/60 bg-transparent text-foreground hover:border-foreground/60",
+                  )}
+                >
+                  {f}
+                </button>
+              );
+            })}
           </div>
-        )}
+
+          <Button className="rounded-full bg-foreground px-5 text-sm font-medium text-background hover:bg-foreground/90">
+            <Plus className="mr-1 h-4 w-4" /> Create
+          </Button>
+        </div>
 
         {/* Loading */}
         {isLoading && (
-          <div className="columns-2 gap-4 md:columns-3 lg:columns-4 xl:columns-5">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="mb-4 break-inside-avoid">
-                <Skeleton className={`w-full rounded-2xl ${i % 3 === 0 ? "h-80" : i % 3 === 1 ? "h-64" : "h-72"}`} />
-                <Skeleton className="mt-3 h-4 w-3/4" />
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i}>
+                <Skeleton className="aspect-[4/3] w-full rounded-2xl" />
+                <Skeleton className="mt-3 h-4 w-2/3" />
+                <Skeleton className="mt-2 h-3 w-1/3" />
               </div>
             ))}
           </div>

@@ -1,62 +1,63 @@
 import { Link } from "react-router-dom";
-import type { Board } from "@/types/board";
-import { cn } from "@/lib/utils";
+import type { MockBoard } from "@/lib/mockBoards";
 
 interface BoardCardProps {
-  board: Board;
-  /** Pinterest-style staggered heights */
-  heightClass?: string;
+  board: MockBoard;
 }
 
-export const BoardCard = ({ board, heightClass = "h-72" }: BoardCardProps) => {
+export const BoardCard = ({ board }: BoardCardProps) => {
+  const [c1, c2, c3, c4] = board.covers;
+
   return (
-    <Link
-      to={`/boards/${board.id}`}
-      className="group mb-4 block break-inside-avoid"
-    >
-      <div
-        className={cn(
-          "relative w-full overflow-hidden rounded-2xl bg-muted shadow-card transition-all duration-500 group-hover:shadow-editorial",
-          heightClass,
-        )}
-      >
-        {board.coverImage ? (
-          <img
-            src={board.coverImage}
-            alt={board.name}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-blush">
-            <span className="font-display text-2xl text-ink/40">
-              {board.name}
-            </span>
+    <Link to={`/boards/${board.id}`} className="group block">
+      {/* Pinterest-style collage: 1 large left + 2 small right + 1 wide bottom-right */}
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-white/5">
+        <div className="grid h-full grid-cols-3 grid-rows-2 gap-1">
+          <div className="col-span-2 row-span-2 overflow-hidden">
+            {c1 && (
+              <img
+                src={c1}
+                alt={board.name}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            )}
           </div>
-        )}
-
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-        <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-foreground backdrop-blur">
-          {board.style}
-        </span>
-
-        <div className="absolute inset-x-3 bottom-3 translate-y-2 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          <p className="text-xs text-background/80">
-            {board.outfitCount} {board.outfitCount === 1 ? "outfit" : "outfits"}
-          </p>
+          <div className="col-span-1 row-span-1 overflow-hidden">
+            {c2 && (
+              <img
+                src={c2}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            )}
+          </div>
+          <div className="col-span-1 row-span-1 overflow-hidden">
+            {c3 && (
+              <img
+                src={c3}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            )}
+          </div>
         </div>
+
+        {/* hover tint */}
+        <div className="pointer-events-none absolute inset-0 bg-foreground/0 transition-colors duration-300 group-hover:bg-foreground/10" />
+        {/* unused fourth cover kept for richer collages on larger cards */}
+        {c4 && <span className="hidden">{c4}</span>}
       </div>
 
       <div className="mt-3 px-1">
-        <h3 className="font-display text-lg leading-tight text-foreground">
+        <h3 className="truncate font-display text-xl font-semibold leading-tight text-foreground">
           {board.name}
         </h3>
-        {board.description && (
-          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-            {board.description}
-          </p>
-        )}
+        <p className="mt-1 text-xs text-muted-foreground">
+          {board.pinsLabel} <span className="mx-1.5">·</span> {board.updatedLabel}
+        </p>
       </div>
     </Link>
   );
