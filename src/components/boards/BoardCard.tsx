@@ -6,7 +6,8 @@ interface BoardCardProps {
 }
 
 export const BoardCard = ({ board }: BoardCardProps) => {
-  const [c1, c2, c3, c4] = board.covers;
+  const covers = Array.isArray(board.covers) ? board.covers : [];
+  const [c1, c2, c3, c4] = [covers[0], covers[1], covers[2], covers[3]];
 
   return (
     <Link to={`/boards/${board.id}`} className="group block">
