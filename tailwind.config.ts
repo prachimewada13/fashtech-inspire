@@ -13,12 +13,27 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['"Playfair Display"', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      backgroundImage: {
+        'gradient-editorial': 'var(--gradient-editorial)',
+        'gradient-blush': 'var(--gradient-blush)',
+      },
+      boxShadow: {
+        editorial: 'var(--shadow-editorial)',
+        card: 'var(--shadow-card)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        blush: "hsl(var(--blush))",
+        ink: "hsl(var(--ink))",
+        champagne: "hsl(var(--champagne))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
